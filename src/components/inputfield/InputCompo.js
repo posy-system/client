@@ -1,6 +1,7 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
-export default function InputCompo({
+function InputCompo({
   type,
   placeholder,
   label,
@@ -48,3 +49,20 @@ export default function InputCompo({
     </div>
   )
 }
+
+InputCompo.propTypes = {
+  type: PropTypes.string,
+  placeholder: PropTypes.string,
+  label: PropTypes.string,
+  icon: PropTypes.node,
+  name: PropTypes.string,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  onChange: PropTypes.func,
+  onBlur: PropTypes.func,
+  autoComplete: PropTypes.string,
+  required: PropTypes.bool,
+  disabled: PropTypes.bool,
+  className: PropTypes.string,
+}
+
+export default InputCompo
