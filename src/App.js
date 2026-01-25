@@ -1,15 +1,14 @@
 
-import { Route,  Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import './App.css';
-import HomePage from './pages/HomePage';
 import ThemeToggle from './components/button/ThemeToggle';
 import useTheme from './hooks/useTheme';
-import Test from './pages/Test';
 import Loginpage from './pages/Loginpage';
 import axios from 'axios';
 import { Toaster } from 'react-hot-toast';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import CashierPage from './pages/cashier/CashierPage';
+import RequireRole from './components/auth/RequireRole';
 
 
 
@@ -27,10 +26,14 @@ function App() {
       </div>
       <Routes>
         <Route path='/' element={<Loginpage />} />
-        <Route path='/home' element={<HomePage />} />
-        <Route path='/test' element={<Test/>} />
-        <Route path='/admindashboard' element={<AdminDashboard/>} />
-        <Route path='/cashierpage' element={<CashierPage/>} />
+
+        <Route element={<RequireRole allowedRoles={['admin']} />}>
+          <Route path='/admindashboard' element={<AdminDashboard />} />
+        </Route>
+
+        <Route element={<RequireRole allowedRoles={['cashier']} />}>
+          <Route path='/cashierpage' element={<CashierPage />} />
+        </Route>
         
       </Routes>
     </div>

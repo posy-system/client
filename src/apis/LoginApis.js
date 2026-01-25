@@ -8,3 +8,11 @@ export const LoginUser = async (credentials) => {
     throw error;
     }
 };
+
+//logout button (remove local storage token and usert key and re derect to loging page)
+export const LogoutUser = (navigate) => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+  delete axios.defaults.headers.common.Authorization;
+  navigate('/'); // Redirect to login page
+};
