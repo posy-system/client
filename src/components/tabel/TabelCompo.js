@@ -1,8 +1,97 @@
 import React, { useEffect, useMemo, useState } from "react";
 import PropTypes from "prop-types";
 import toast from "react-hot-toast";
-import { FiEdit2, FiTrash2, FiX } from "react-icons/fi";
+import { FiEdit2, FiTrash2, FiX, FiEye } from "react-icons/fi";
 import ButtonCompo from "../button/ButtonCompo";
+
+// DeleteModal to confirm deletion
+function DeleteModal({ open, row, onClose, onConfirm }) {
+  if (!open || !row) return null;
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
+      <div className="relative w-full max-w-md rounded-2xl bg-white p-5 shadow-2xl dark:bg-slate-950">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h2 className="text-lg font-semibold text-red-600 dark:text-red-400">Delete Record?</h2>
+            <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+              Are you sure you want to delete this record? This action cannot be undone.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-slate-200 text-slate-700 hover:bg-slate-50 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-900"
+            aria-label="Close"
+          >
+            <FiX />
+          </button>
+        </div>
+        <div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+          <ButtonCompo
+            variant="slate"
+            onClick={onClose}
+            className="w-full sm:w-auto"
+          >
+            No
+          </ButtonCompo>
+          <ButtonCompo
+            variant="red"
+            onClick={onConfirm}
+            className="w-full sm:w-auto"
+          >
+            Yes, Delete
+          </ButtonCompo>
+        </div>
+      </div>
+    </div>
+  );
+}
+// ViewModal to display row details
+function ViewModal({ open, row, onClose }) {
+  if (!open || !row) return null;
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
+      <div className="relative w-full max-w-xl rounded-2xl bg-white p-5 shadow-2xl dark:bg-slate-950">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h2 className="text-lg font-semibold">View Details</h2>
+            <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+              Details of the selected row.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-slate-200 text-slate-700 hover:bg-slate-50 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-900"
+            aria-label="Close"
+          >
+            <FiX />
+          </button>
+        </div>
+        <div className="mt-4 max-h-96 overflow-y-auto">
+          <table className="min-w-full text-sm">
+            <tbody>
+              {Object.entries(row).map(([key, value]) => (
+                <tr key={key}>
+                  <td className="py-2 pr-4 font-semibold text-slate-700 dark:text-slate-200 align-top">{key}</td>
+                  <td className="py-2 text-slate-600 dark:text-slate-300 align-top">{String(value)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="mt-6 flex justify-end">
+          <ButtonCompo variant="blue" onClick={onClose}>
+            Close
+          </ButtonCompo>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 
 function formatDateTime(value) {
   if (!value) return "-";
@@ -228,6 +317,12 @@ export default function TabelCompo({
   const [rows, setRows] = useState(isControlled ? rowsProp : []);
   const [editingRow, setEditingRow] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [viewingRow, setViewingRow] = useState(null);
+  const [viewModalOpen, setViewModalOpen] = useState(false);
+  const handleViewClick = (row) => {
+    setViewingRow(row);
+    setViewModalOpen(true);
+  };
 
   useEffect(() => {
     if (isControlled) setRows(rowsProp);
@@ -253,19 +348,24 @@ export default function TabelCompo({
     if (typeof onEdit === "function") onEdit(row);
   };
 
+  const [deleteRow, setDeleteRow] = useState(null);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const handleDeleteClick = (row) => {
-    const ok = window.confirm("Delete this record?");
-    if (!ok) return;
+    setDeleteRow(row);
+    setDeleteModalOpen(true);
+  };
+  const handleConfirmDelete = () => {
+    if (!deleteRow) return;
     if (typeof onDelete === "function") {
-      onDelete(row);
-      return;
+      onDelete(deleteRow);
+    } else {
+      setRows((prev) =>
+        prev.filter((r) => resolveRowId(r) !== resolveRowId(deleteRow)),
+      );
+      toast.success("Deleted");
     }
-
-    // fallback local delete if consumer didn't provide onDelete
-    setRows((prev) =>
-      prev.filter((r) => resolveRowId(r) !== resolveRowId(row)),
-    );
-    toast.success("Deleted");
+    setDeleteModalOpen(false);
+    setDeleteRow(null);
   };
 
   const handleSaveEdit = (updatedRow) => {
@@ -347,6 +447,14 @@ export default function TabelCompo({
                       <td className="px-4 py-3">
                         <div className="flex justify-end gap-2">
                           <ButtonCompo
+                            variant="blue"
+                            size="sm"
+                            onClick={() => handleViewClick(row)}
+                            icon={<FiEye />}
+                          >
+                            View
+                          </ButtonCompo>
+                          <ButtonCompo
                             variant="green"
                             size="sm"
                             onClick={() => handleEditClick(row)}
@@ -383,6 +491,23 @@ export default function TabelCompo({
           setEditingRow(null);
         }}
         onSave={handleSaveEdit}
+      />
+      <ViewModal
+        open={viewModalOpen}
+        row={viewingRow}
+        onClose={() => {
+          setViewModalOpen(false);
+          setViewingRow(null);
+        }}
+      />
+      <DeleteModal
+        open={deleteModalOpen}
+        row={deleteRow}
+        onClose={() => {
+          setDeleteModalOpen(false);
+          setDeleteRow(null);
+        }}
+        onConfirm={handleConfirmDelete}
       />
     </div>
   );
