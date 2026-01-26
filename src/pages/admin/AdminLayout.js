@@ -33,9 +33,6 @@ export default function AdminLayout() {
               Manage your POS system.
             </p>
           </div>
-          <div className="flex justify-end">
-            <LogoutButton />
-          </div>
         </div>
 
         <Outlet />
