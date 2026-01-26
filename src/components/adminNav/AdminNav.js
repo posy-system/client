@@ -7,6 +7,7 @@ import {
   FiFileText,
   FiBell,
 } from "react-icons/fi";
+import LogoutButton from "../button/LogoutButton";
 
 const navItems = [
   { to: "/admindashboard", label: "Dashboard", icon: FiGrid, end: true },
@@ -18,7 +19,7 @@ const navItems = [
 
 export default function AdminNav() {
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-screen flex-col">
       <div className="border-b border-slate-200 px-4 py-4 dark:border-[#2A2A2C]">
         <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
           Admin
@@ -54,7 +55,7 @@ export default function AdminNav() {
       </nav>
 
       <div className="border-t border-slate-200 p-3 text-xs text-slate-500 dark:border-[#2A2A2C] dark:text-slate-400">
-        v1.0
+        <LogoutButton/>
       </div>
     </div>
   );
