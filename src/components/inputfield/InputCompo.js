@@ -23,7 +23,7 @@ function InputCompo({
       {label && (
         <label
           htmlFor={id}
-          className="block mt-2 text-sm font-medium dark:text-gray-500 text-start"
+          className="block mt-2 text-sm font-medium dark:text-white text-start"
         >
           {label}
         </label>
@@ -42,7 +42,7 @@ function InputCompo({
           autoComplete={autoComplete}
           required={required}
           disabled={disabled}
-          className="border p-2 rounded-md w-full pl-8 disabled:opacity-60"
+          className="border p-2 rounded-md w-full pl-8 disabled:opacity-60 dark:text-stone-950"
           {...rest}
         />
       </div>

@@ -1,7 +1,6 @@
 import React, { useMemo } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import AdminNav from "../../components/adminNav/AdminNav";
-import LogoutButton from "../../components/button/LogoutButton";
 
 function useAdminTitle() {
   const { pathname } = useLocation();
@@ -32,9 +31,6 @@ export default function AdminLayout() {
             <p className="text-sm text-slate-600 dark:text-slate-400">
               Manage your POS system.
             </p>
-          </div>
-          <div className="flex justify-end">
-            <LogoutButton />
           </div>
         </div>
 

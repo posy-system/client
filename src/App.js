@@ -27,7 +27,7 @@ function App() {
   return (
     <div className="App min-h-screen bg-white text-slate-900 transition-colors dark:bg-[#19191A] dark:text-slate-100">
        <Toaster position="bottom-right" />
-      <div className="mx-auto flex  items-center justify-end p-4">
+      <div className="mx-auto flex  items-center justify-end p-4 absolute top-0 right-0">
         <ThemeToggle theme={theme} onToggle={toggleTheme} />
       </div>
       <Routes>
