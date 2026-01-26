@@ -142,7 +142,7 @@ export default function HomePage() {
       <InputCompo 
         type="text" 
         placeholder="Enter something"
-        label="Input Label"
+        label="fuck"
         icon={<FaRegUser className='text-slate-500 dark:text-slate-300' />}
       />
 
