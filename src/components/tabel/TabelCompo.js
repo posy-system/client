@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import PropTypes from "prop-types";
 import toast from "react-hot-toast";
-import { FiEdit2, FiTrash2, FiX } from "react-icons/fi";
+import { FiEdit2, FiTrash2, FiX, FiEye } from "react-icons/fi";
 import ButtonCompo from "../button/ButtonCompo";
 
 function formatDateTime(value) {
@@ -215,6 +215,7 @@ export default function TabelCompo({
   rows: rowsProp = [],
   columns = [],
   getRowId,
+  onView,
   onEdit,
   onDelete,
   editFields,
@@ -238,7 +239,12 @@ export default function TabelCompo({
   const showActions =
     typeof onEdit === "function" ||
     typeof onDelete === "function" ||
+    typeof onView === "function" ||
     Array.isArray(editFields);
+
+const handleViewClick = (row) => {
+  if (typeof onView === "function") onView(row);
+};
 
   const handleEditClick = (row) => {
     if (Array.isArray(editFields) && editFields.length > 0) {
