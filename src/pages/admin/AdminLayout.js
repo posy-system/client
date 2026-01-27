@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import AdminNav from "../../components/adminNav/AdminNav";
+import LogoutButton from "../../components/button/LogoutButton";
 
 function useAdminTitle() {
   const { pathname } = useLocation();
