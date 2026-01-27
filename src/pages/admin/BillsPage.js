@@ -1,5 +1,6 @@
 import React from "react";
-import TabelCompo, { TableFormat } from '../../components/tabel/TabelCompo';
+import { TableFormat } from '../../components/tabel/TabelCompo';
+import BillTableCompo from '../../components/tabel/BillTableCompo';
 import toast from 'react-hot-toast';
 import { useState, useEffect } from 'react';
 import { GetBills, DeleteBill } from "../../apis/BillApis";
@@ -21,21 +22,19 @@ export default function BillsPage() {
 }, []);
 
   const columns = [
-    {
-      key: "billNo",
-      header: "Bill No",
-    },
-    {
-      key: "imageUrl",
-      header: "Image",
-    },
-    {
-      key: "createdAt",
-      header: "Created",
-      render: (v) => TableFormat.formatDateTime(v),
-      muted: true,
-    },
-  ];
+  {
+    key: "_id",
+    header: "Bill No",
+    render: (v) => v || "-"
+  },
+  
+  {
+    key: "billDate",
+    header: "Bill Date & Time",
+    render: (v) => TableFormat.formatDateTime(v),
+    muted: true,
+  },
+];
 
   const handleDeleteBill = async (row) => {
     try {
@@ -47,13 +46,23 @@ export default function BillsPage() {
     }
   };
 
+  const handleViewClick = (row) => {
+    // console.log(row);
+  };
+
+  const handleDownloadClick = (row) => {
+    // console.log(row);
+  };
+
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-[#2A2A2C] dark:bg-[#19191A]">
       <div>
-        <TabelCompo
+        <BillTableCompo
           title="Bills"
           rows={bills}
           columns={columns}
+          onView={handleViewClick}
+          onDownload={handleDownloadClick}
           onDelete={handleDeleteBill}
         />
       </div>
