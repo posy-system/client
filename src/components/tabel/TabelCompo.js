@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import PropTypes from "prop-types";
 import toast from "react-hot-toast";
-import { FiEdit2, FiTrash2, FiX } from "react-icons/fi";
+import { FiEdit2, FiTrash2, FiX, FiEye } from "react-icons/fi";
 import ButtonCompo from "../button/ButtonCompo";
 
 function formatDateTime(value) {
@@ -215,6 +215,7 @@ export default function TabelCompo({
   rows: rowsProp = [],
   columns = [],
   getRowId,
+  onView,
   onEdit,
   onDelete,
   editFields,
@@ -238,7 +239,12 @@ export default function TabelCompo({
   const showActions =
     typeof onEdit === "function" ||
     typeof onDelete === "function" ||
+    typeof onView === "function" ||
     Array.isArray(editFields);
+
+const handleViewClick = (row) => {
+  if (typeof onView === "function") onView(row);
+};
 
   const handleEditClick = (row) => {
     if (Array.isArray(editFields) && editFields.length > 0) {
@@ -338,26 +344,40 @@ export default function TabelCompo({
                         </td>
                       );
                     })}
-
                     {showActions && (
                       <td className="px-4 py-3">
                         <div className="flex justify-end gap-2">
-                          <ButtonCompo
-                            variant="green"
-                            size="sm"
-                            onClick={() => handleEditClick(row)}
-                            icon={<FiEdit2 />}
-                          >
-                            Edit
-                          </ButtonCompo>
-                          <ButtonCompo
-                            variant="red"
-                            size="sm"
-                            onClick={() => handleDeleteClick(row)}
-                            icon={<FiTrash2 />}
-                          >
-                            Delete
-                          </ButtonCompo>
+                          {typeof onView === "function" && (
+                            <ButtonCompo
+                              variant="blue"
+                              size="sm"
+                              onClick={() => handleViewClick(row)}
+                              icon={<FiEye />}
+                            >
+                              View
+                            </ButtonCompo>
+                          )}
+                          {typeof onEdit === "function" && (
+                            <ButtonCompo
+                              variant="green"
+                              size="sm"
+                              onClick={() => handleEditClick(row)}
+                              icon={<FiEdit2 />}
+                            >
+                              Edit
+                            </ButtonCompo>
+                          )}
+
+                          {typeof onDelete === "function" && (
+                            <ButtonCompo
+                              variant="red"
+                              size="sm"
+                              onClick={() => handleDeleteClick(row)}
+                              icon={<FiTrash2 />}
+                            >
+                              Delete
+                            </ButtonCompo>
+                          )}
                         </div>
                       </td>
                     )}

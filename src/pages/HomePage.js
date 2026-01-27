@@ -133,6 +133,10 @@ export default function HomePage() {
     { key: "imageUrl", label: "Image URL", type: "text" },
   ];
 
+  const handleViewItem = (row) => {
+    console.log(row); //only for view
+  }
+
   const handleEditItem = (updatedRow) => {
     setItems((prev) =>
       prev.map((r) => (r.id === updatedRow.id ? updatedRow : r)),
@@ -187,6 +191,7 @@ export default function HomePage() {
           title="Inventory"
           rows={items}
           columns={columns}
+          onView={handleViewItem}
           onEdit={handleEditItem}
           onDelete={handleDeleteItem}
           editFields={editFields}
