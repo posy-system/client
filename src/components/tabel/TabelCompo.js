@@ -13,9 +13,12 @@ function DeleteModal({ open, row, onClose, onConfirm }) {
       <div className="relative w-full max-w-md rounded-2xl bg-white p-5 shadow-2xl dark:bg-slate-950">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h2 className="text-lg font-semibold text-red-600 dark:text-red-400">Delete Record?</h2>
+            <h2 className="text-lg font-semibold text-red-600 dark:text-red-400">
+              Delete Record?
+            </h2>
             <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-              Are you sure you want to delete this record? This action cannot be undone.
+              Are you sure you want to delete this record? This action cannot be
+              undone.
             </p>
           </div>
           <button
@@ -75,8 +78,12 @@ function ViewModal({ open, row, onClose }) {
             <tbody>
               {Object.entries(row).map(([key, value]) => (
                 <tr key={key}>
-                  <td className="py-2 pr-4 font-semibold text-slate-700 dark:text-slate-200 align-top">{key}</td>
-                  <td className="py-2 text-slate-600 dark:text-slate-300 align-top">{String(value)}</td>
+                  <td className="py-2 pr-4 font-semibold text-slate-700 dark:text-slate-200 align-top">
+                    {key}
+                  </td>
+                  <td className="py-2 text-slate-600 dark:text-slate-300 align-top">
+                    {String(value)}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -91,7 +98,6 @@ function ViewModal({ open, row, onClose }) {
     </div>
   );
 }
-
 
 function formatDateTime(value) {
   if (!value) return "-";
@@ -119,12 +125,8 @@ function ToggleSwitch({ checked, onChange, disabled = false }) {
         disabled={disabled}
         onChange={(e) => onChange?.(e.target.checked)}
       />
-      <div
-        className="relative h-6 w-11 rounded-full bg-slate-300 shadow-inner transition-colors peer-checked:bg-emerald-500 peer-focus-visible:ring-2 peer-focus-visible:ring-emerald-500 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-white dark:bg-slate-700 dark:peer-focus-visible:ring-offset-slate-950"
-      >
-        <div
-          className="absolute left-0.5 top-0.5 h-5 w-5 translate-x-0 rounded-full border border-slate-200 bg-white shadow-sm transition-transform peer-checked:translate-x-5 dark:border-slate-800"
-        />
+      <div className="relative h-6 w-11 rounded-full bg-slate-300 shadow-inner transition-colors peer-checked:bg-emerald-500 peer-focus-visible:ring-2 peer-focus-visible:ring-emerald-500 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-white dark:bg-slate-700 dark:peer-focus-visible:ring-offset-slate-950">
+        <div className="absolute left-0.5 top-0.5 h-5 w-5 translate-x-0 rounded-full border border-slate-200 bg-white shadow-sm transition-transform peer-checked:translate-x-5 dark:border-slate-800" />
       </div>
     </label>
   );
@@ -442,34 +444,40 @@ export default function TabelCompo({
                         </td>
                       );
                     })}
-
                     {showActions && (
                       <td className="px-4 py-3">
                         <div className="flex justify-end gap-2">
-                          <ButtonCompo
-                            variant="blue"
-                            size="sm"
-                            onClick={() => handleViewClick(row)}
-                            icon={<FiEye />}
-                          >
-                            View
-                          </ButtonCompo>
-                          <ButtonCompo
-                            variant="green"
-                            size="sm"
-                            onClick={() => handleEditClick(row)}
-                            icon={<FiEdit2 />}
-                          >
-                            Edit
-                          </ButtonCompo>
-                          <ButtonCompo
-                            variant="red"
-                            size="sm"
-                            onClick={() => handleDeleteClick(row)}
-                            icon={<FiTrash2 />}
-                          >
-                            Delete
-                          </ButtonCompo>
+                          {typeof onView === "function" && (
+                            <ButtonCompo
+                              variant="blue"
+                              size="sm"
+                              onClick={() => handleViewClick(row)}
+                              icon={<FiEye />}
+                            >
+                              View
+                            </ButtonCompo>
+                          )}
+                          {typeof onEdit === "function" && (
+                            <ButtonCompo
+                              variant="green"
+                              size="sm"
+                              onClick={() => handleEditClick(row)}
+                              icon={<FiEdit2 />}
+                            >
+                              Edit
+                            </ButtonCompo>
+                          )}
+
+                          {typeof onDelete === "function" && (
+                            <ButtonCompo
+                              variant="red"
+                              size="sm"
+                              onClick={() => handleDeleteClick(row)}
+                              icon={<FiTrash2 />}
+                            >
+                              Delete
+                            </ButtonCompo>
+                          )}
                         </div>
                       </td>
                     )}
