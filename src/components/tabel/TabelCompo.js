@@ -30,12 +30,8 @@ function ToggleSwitch({ checked, onChange, disabled = false }) {
         disabled={disabled}
         onChange={(e) => onChange?.(e.target.checked)}
       />
-      <div
-        className="relative h-6 w-11 rounded-full bg-slate-300 shadow-inner transition-colors peer-checked:bg-emerald-500 peer-focus-visible:ring-2 peer-focus-visible:ring-emerald-500 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-white dark:bg-slate-700 dark:peer-focus-visible:ring-offset-slate-950"
-      >
-        <div
-          className="absolute left-0.5 top-0.5 h-5 w-5 translate-x-0 rounded-full border border-slate-200 bg-white shadow-sm transition-transform peer-checked:translate-x-5 dark:border-slate-800"
-        />
+      <div className="relative h-6 w-11 rounded-full bg-slate-300 shadow-inner transition-colors peer-checked:bg-emerald-500 peer-focus-visible:ring-2 peer-focus-visible:ring-emerald-500 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-white dark:bg-slate-700 dark:peer-focus-visible:ring-offset-slate-950">
+        <div className="absolute left-0.5 top-0.5 h-5 w-5 translate-x-0 rounded-full border border-slate-200 bg-white shadow-sm transition-transform peer-checked:translate-x-5 dark:border-slate-800" />
       </div>
     </label>
   );
