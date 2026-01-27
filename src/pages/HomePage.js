@@ -14,7 +14,7 @@ const INITIAL_ITEMS = [
     ourPrice: 12,
     quantity: 100,
     available: true,
-    imageUrl: 'ml',
+    imageUrl: 'https://res.cloudinary.com/dj3azxggg/image/upload/v1767970384/items/nkrodyxat9e2uno1lnu1.png',
     createdAt: '2026-01-24T18:50:52.331Z',
     updatedAt: '2026-01-24T19:04:16.826Z',
   },
@@ -26,7 +26,7 @@ const INITIAL_ITEMS = [
     ourPrice: 45,
     quantity: 32,
     available: true,
-    imageUrl: '',
+    imageUrl: 'https://res.cloudinary.com/dj3azxggg/image/upload/v1767970384/items/nkrodyxat9e2uno1lnu1.png',
     createdAt: '2026-01-23T10:12:00.000Z',
     updatedAt: '2026-01-24T10:12:00.000Z',
   },
@@ -38,7 +38,7 @@ const INITIAL_ITEMS = [
     ourPrice: 45,
     quantity: 32,
     available: true,
-    imageUrl: '',
+    imageUrl: 'https://res.cloudinary.com/dj3azxggg/image/upload/v1767970384/items/nkrodyxat9e2uno1lnu1.png',
     createdAt: '2026-01-23T10:12:00.000Z',
     updatedAt: '2026-01-24T10:12:00.000Z',
   },
@@ -62,6 +62,23 @@ export default function HomePage() {
     {
       key: 'imageUrl',
       header: 'Image',
+      render: (value) => (
+        <div className="w-16 h-16 rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+          {value ? (
+            <img 
+              src={value} 
+              alt="Item" 
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                e.target.style.display = 'none';
+                e.target.parentElement.innerHTML = '<span class="text-xs text-slate-500">No image</span>';
+              }}
+            />
+          ) : (
+            <span className="text-xs text-slate-500">No image</span>
+          )}
+        </div>
+      ),
     },
     {
       key: 'itemName',
@@ -140,7 +157,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className="mx-auto  px-4 pb-8">
+    <div className="px-4 pb-8 mx-auto">
       <h1 className="mb-4 text-2xl font-semibold">Home Page</h1>
 
       <InputCompo 
@@ -150,7 +167,7 @@ export default function HomePage() {
         icon={<FaRegUser className='text-slate-500 dark:text-slate-300' />}
       />
 
-      <div className="mt-6 flex flex-wrap gap-3">
+      <div className="flex flex-wrap gap-3 mt-6">
         <ButtonCompo
           variant="blue"
           onClick={() => alert('Blue button clicked!')}
