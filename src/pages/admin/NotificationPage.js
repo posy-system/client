@@ -1,68 +1,106 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DialogBox from "../../components/Notification/DialogBox";
+import {
+  GetNotifications,
+  MarkNotificationAsRead,
+  DeleteNotification,
+} from "../../../src/apis/NotificationAPI";
 
 export default function NotificationPage() {
-  const [notifications, setNotifications] = useState([
-    {
-      _id: "1",
-      subject: "Low Stock Alert",
-      message: "Product ABC is running low.",
-      type: "WARNING",
-      viewed: false,
-      createdAt: new Date().toISOString(),
-    },
-    {
-      _id: "2",
-      subject: "Order Completed",
-      message: "Order #123 has been successfully delivered.",
-      type: "SUCCESS",
-      viewed: true,
-      createdAt: new Date().toISOString(),
-    },
-  ]);
+  const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleView = (id) => {
-    setNotifications((prev) =>
-      prev.map((n) =>
-        n._id === id ? { ...n, viewed: true } : n
-      )
-    );
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
-    // TODO: API call
-    // PATCH /api/notifications/:id/view
+  useEffect(() => {
+    fetchNotifications(page);
+  }, [page]);
+
+  const fetchNotifications = async (pageNumber) => {
+    setLoading(true);
+    try {
+      const response = await GetNotifications(pageNumber);
+
+      setNotifications(Array.isArray(response.data) ? response.data : []);
+      setTotalPages(response.totalPages || 1);
+    } catch (error) {
+      console.error("Fetch notifications failed:", error);
+      setNotifications([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleDelete = (id) => {
-    setNotifications((prev) =>
-      prev.filter((n) => n._id !== id)
-    );
+  const handleView = async (id) => {
+    try {
+      await MarkNotificationAsRead(id);
+      setNotifications((prev) =>
+        prev.map((n) =>
+          n._id === id ? { ...n, viewed: true } : n
+        )
+      );
+    } catch (error) {
+      console.error("Mark as read failed:", error);
+    }
+  };
 
-    // TODO: API call
-    // DELETE /api/notifications/:id
+  const handleDelete = async (id) => {
+    try {
+      await DeleteNotification(id);
+      setNotifications((prev) => prev.filter((n) => n._id !== id));
+    } catch (error) {
+      console.error("Delete failed:", error);
+    }
   };
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-[#2A2A2C] dark:bg-[#19191A]">
-      <h2 className="text-xl font-semibold mb-1">Notifications</h2>
-      <p className="text-sm text-slate-600 dark:text-slate-400 mb-6">
-        View and manage your notifications
-      </p>
-
-      <div className="max-w-xl mx-auto">
-        {notifications.length === 0 ? (
-          <p className="text-gray-500 text-center">
-            No notifications available
-          </p>
-        ) : (
-          notifications.map((n) => (
+    <div className="rounded-2xl border bg-white p-6 shadow-sm dark:bg-[#19191A]">
+      <h2 className="text-xl font-semibold mb-5">Notifications</h2>
+  
+      <div className="max-w-6xl mx-auto">
+        {(() => {
+          if (loading) {
+            return <p className="text-center">Loading...</p>;
+          }
+          if (notifications.length === 0) {
+            return (
+              <p className="text-center text-gray-500">
+                No notifications available
+              </p>
+            );
+          }
+          return notifications.map((n) => (
             <DialogBox
               key={n._id}
               notification={n}
               onView={handleView}
               onDelete={handleDelete}
             />
-          ))
-        )}
+          ));
+        })()}
+      </div>
+
+      <div className="flex justify-center items-center gap-4 mt-6">
+        <button
+          disabled={page === 1}
+          onClick={() => setPage((p) => p - 1)}
+          className="px-4 py-1 rounded bg-gray-200 disabled:opacity-50"
+        >
+          Prev
+        </button>
+
+        <span className="text-sm">
+          Page {page} of {totalPages}
+        </span>
+
+        <button
+          disabled={page === totalPages}
+          onClick={() => setPage((p) => p + 1)}
+          className="px-4 py-1 rounded bg-gray-200 disabled:opacity-50"
+        >
+          Next
+        </button>
       </div>
     </div>
   );
