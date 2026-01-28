@@ -85,7 +85,7 @@ export default function NotificationPage() {
         <button
           disabled={page === 1}
           onClick={() => setPage((p) => p - 1)}
-          className="px-4 py-1 rounded bg-gray-200 disabled:opacity-50"
+          className="px-4 py-1 rounded bg-gray-700 disabled:opacity-50"
         >
           Prev
         </button>
@@ -97,7 +97,7 @@ export default function NotificationPage() {
         <button
           disabled={page === totalPages}
           onClick={() => setPage((p) => p + 1)}
-          className="px-4 py-1 rounded bg-gray-200 disabled:opacity-50"
+          className="px-4 py-1 rounded bg-gray-700 disabled:opacity-50"
         >
           Next
         </button>
